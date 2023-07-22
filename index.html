@@ -14,18 +14,17 @@
             max-width: 500px;
             margin: 0 auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0); 
+            background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
         }
 
         h2 {
-            ext-align: center;
-            color: #00eeff;
-            background-color: #ffffff00;
+            text-align: center;
+            color: #333;
+            background-color: #fff;
             padding: 10px;
             border: 2px solid #fff;
-            text-shadow: #00e1ff;
             border-radius: 5px;
         }
 
@@ -106,6 +105,7 @@
         </div>
     </div>
 
+    <script src="https://code.responsivevoice.org/1.5.30/responsivevoice.js"></script>
     <script>
         function convertToUpper() {
             var text = document.getElementById('text-input').value;
@@ -127,19 +127,19 @@
 
         function convertToSpeech() {
             var text = document.getElementById('text-input').value;
-            var audioUrl = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=' + encodeURIComponent(text);
-            var audio = document.getElementById('audio-player');
-            audio.src = audioUrl;
-            audio.load();
-
-            var downloadButton = document.getElementById('download-button');
-            downloadButton.style.display = 'inline-block';
-            downloadButton.setAttribute('href', audioUrl);
-            downloadButton.setAttribute('download', 'converted_speech.mp3');
+            responsiveVoice.speak(text, 'UK English Male', {
+                onend: function () {
+                    var downloadButton = document.getElementById('download-button');
+                    downloadButton.style.display = 'inline-block';
+                    downloadButton.onclick = function () {
+                        downloadAudio(text);
+                    };
+                }
+            });
         }
 
-        function downloadAudio() {
-            var audioUrl = document.getElementById('download-button').href;
+        function downloadAudio(text) {
+            var audioUrl = 'data:audio/mpeg;base64,' + btoa(responsiveVoice.voice.synthesize(text, 'UK English Male'));
             var a = document.createElement('a');
             a.style.display = 'none';
             a.href = audioUrl;
