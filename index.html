@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: url('oo.jpg') center/cover no-repeat;
+            background: url('background.jpg') center/cover no-repeat;
             margin: 0;
             padding: 0;
         }
@@ -100,7 +100,7 @@
             <h3>Converted Text:</h3>
             <p id="converted-text"></p>
             <br>
-            <button id="download-button" class="download-button" onclick="downloadAudio()">Download Audio</button>
+            <a id="download-button" class="download-button" download>Download Audio</a>
             <audio id="audio-player" controls></audio>
         </div>
     </div>
@@ -129,24 +129,12 @@
             var text = document.getElementById('text-input').value;
             responsiveVoice.speak(text, 'UK English Male', {
                 onend: function () {
+                    var audio = new Audio('https://responsivevoice.org/responsivevoice/getvoice.php?t=' + encodeURIComponent(text) + '&tl=uk&sv=g1');
                     var downloadButton = document.getElementById('download-button');
                     downloadButton.style.display = 'inline-block';
-                    downloadButton.onclick = function () {
-                        downloadAudio(text);
-                    };
+                    downloadButton.href = audio.src;
                 }
             });
-        }
-
-        function downloadAudio(text) {
-            var audioUrl = 'data:audio/mpeg;base64,' + btoa(responsiveVoice.voice.synthesize(text, 'UK English Male'));
-            var a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = audioUrl;
-            a.download = 'converted_speech.mp3';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
         }
     </script>
 </body>
